@@ -1,10 +1,10 @@
-package localization;
+package com.tejasmehta.OdometryCore.localization;
 
 /****
  * Made by Tejas Mehta
  * Made on Wednesday, November 04, 2020
- * File Name: com.tejasmehta.OdometryCore.localization.OdometryPosition
- * Package: com.tejasmehta.OdometryCore*
+ * File Name: OdometryPosition
+ * Package: com.tejasmehta.com.tejasmehta.OdometryCore.OdometryCore*
  */
 
 public class OdometryPosition {

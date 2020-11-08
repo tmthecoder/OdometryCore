@@ -2,8 +2,9 @@
  * Made by Tejas Mehta
  * Made on Wednesday, November 04, 2020
  * File Name: PolarCoordinate
- * Package: com.tejasmehta.com.tejasmehta.OdometryCore.OdometryCore.com.tejasmehta.OdometryCore.math*/
-package math;
+ * Package: com.tejasmehta.OdometryCore.math
+ */
+package com.tejasmehta.OdometryCore.math;
 
 
 public class PolarCoordinate {

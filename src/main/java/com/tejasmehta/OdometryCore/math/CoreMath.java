@@ -2,12 +2,12 @@
  * @author Tejas Mehta
  * Made on Wednesday, November 04, 2020
  * File Name: CoreMath
- * Package: math
+ * Package: com.tejasmehta.OdometryCore.math
  */
-package math;
+package com.tejasmehta.OdometryCore.math;
 
 
-import localization.OdometryPosition;
+import com.tejasmehta.OdometryCore.localization.OdometryPosition;
 
 public class CoreMath {
 

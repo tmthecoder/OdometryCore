@@ -2,9 +2,9 @@
  * Made by Tejas Mehta
  * Made on Wednesday, November 04, 2020
  * File Name: LocalCoordinate
- * Package: math
+ * Package: com.tejasmehta.OdometryCore.math
  */
-package math;
+package com.tejasmehta.OdometryCore.math;
 
 public class CartesianCoordinate {
     private final double x;

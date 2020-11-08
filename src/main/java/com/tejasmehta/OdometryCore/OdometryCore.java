@@ -1,7 +1,9 @@
-import localization.OdometryPosition;
-import math.CartesianCoordinate;
-import math.CoreMath;
-import math.PolarCoordinate;
+package com.tejasmehta.OdometryCore;
+
+import com.tejasmehta.OdometryCore.localization.OdometryPosition;
+import com.tejasmehta.OdometryCore.math.CartesianCoordinate;
+import com.tejasmehta.OdometryCore.math.CoreMath;
+import com.tejasmehta.OdometryCore.math.PolarCoordinate;
 
 public class OdometryCore {
 

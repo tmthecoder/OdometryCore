@@ -15,7 +15,7 @@ public class PolarCoordinate {
         double x = cartesian.getX();
         double y = cartesian.getY();
         double r = Math.sqrt(x * x + y * y);
-        double theta = Math.atan(y/x);
+        double theta = x != 0 ? Math.atan(y/x) : 0;
         return new PolarCoordinate(r, theta);
     }
 

@@ -1,76 +1,68 @@
+/****
+ * Made by Tejas Mehta
+ * Made on Wednesday, November 11, 2020
+ * File Name: OdometryCore
+ * Package: com.tejasmehta.OdometryCore
+ */
 package com.tejasmehta.OdometryCore;
 
+import com.tejasmehta.OdometryCore.localization.EncoderPositions;
+import com.tejasmehta.OdometryCore.localization.HeadingUnit;
 import com.tejasmehta.OdometryCore.localization.OdometryPosition;
-import com.tejasmehta.OdometryCore.math.CartesianCoordinate;
 import com.tejasmehta.OdometryCore.math.CoreMath;
-import com.tejasmehta.OdometryCore.math.PolarCoordinate;
 
 public class OdometryCore {
-
-    final double WHEEL_DIAMETER = 1.5;
-    final double CPR = 1450;
-    final double TICKS_TO_INCH = (Math.PI * WHEEL_DIAMETER) / CPR;
-
+    private final double wheelDiameter;
+    private final double cpr;
+    private final double leftOffset;
+    private final double rightOffset;
+    private final double frontBackOffset;
     private static OdometryCore instance;
-    private double previousInchesLeft;
-    private double previousInchesRight;
-    private double previousInchesFB;
-    private double previousHeading;
-    private CartesianCoordinate previousCoordinate;
+    private double leftInches = 0;
+    private double rightInches = 0;
+    private double frontBackInches = 0;
+    private OdometryPosition position = new OdometryPosition(0, 0, 0, HeadingUnit.RADIANS);
 
-    OdometryCore() {
-        previousInchesFB = 0;
-        previousInchesLeft = 0;
-        previousInchesRight = 0;
-        previousHeading = 0;
-        previousCoordinate = new CartesianCoordinate(0, 0);
+    private OdometryCore(double wheelDiameter, double cpr, double leftOffset, double rightOffset, double frontBackOffset) {
+        this.wheelDiameter = wheelDiameter;
+        this.cpr = cpr;
+        this.leftOffset = leftOffset;
+        this.rightOffset = rightOffset;
+        this.frontBackOffset = frontBackOffset;
     }
 
+
     public static OdometryCore getInstance() {
-        if (instance == null) instance = new OdometryCore();
+        if (instance == null) throw new IllegalArgumentException("Please initialize OdometryCore with OdometryCore.initialize(cpr, wheelDiameter, leftOffset, rightOffset, frontBackOffset)");
         return instance;
     }
 
-    public OdometryPosition getCurrentPosition(double leftTicks, double rightTicks, double frontBackTicks, double leftOffset, double rightOffset, double frontBackOffset) {
-        double leftInches = ticksToInches(leftTicks);
-        double rightInches = ticksToInches(rightTicks);
-        double frontBackInches = ticksToInches(frontBackTicks);
-
-        double leftChange = leftInches - previousInchesLeft;
-        double rightChange = rightInches - previousInchesRight;
-        double frontBackChange = frontBackInches - previousInchesFB;
-
-        double absoluteHeading = CoreMath.getHeading(leftInches, rightInches, leftOffset, rightOffset);
-        System.out.println("ABS Heading: " + absoluteHeading);
-        double headingChange = absoluteHeading - previousHeading;
-        System.out.println("Heading Change: " + headingChange);
-        double averageOrientation = previousHeading + headingChange/2;
-        System.out.println("Average Orientation: " + headingChange);
-
-        previousInchesLeft = leftInches;
-        previousInchesRight = rightInches;
-        previousInchesFB = frontBackInches;
-        previousHeading = absoluteHeading;
-
-        PolarCoordinate localOffset = CoreMath.getPolarCoordinate(leftChange, rightChange, frontBackChange, leftOffset, rightOffset, frontBackOffset);
-        System.out.println("LocalX: " + CartesianCoordinate.fromPolar(localOffset).getX() + ", LocalY: " + CartesianCoordinate.fromPolar(localOffset).getY());
-
-        PolarCoordinate globalOffsetPolar = new PolarCoordinate(localOffset.getR(), -averageOrientation);
-        System.out.println("Global Polar offset: " + globalOffsetPolar);
-
-        CartesianCoordinate newGlobalOffset = CartesianCoordinate.fromPolar(globalOffsetPolar);
-        System.out.println("Previous Cartesian Position: " + previousCoordinate);
-        System.out.println("Global Cartesian offset: " + newGlobalOffset);
-
-        CartesianCoordinate absolutePosition = new CartesianCoordinate(newGlobalOffset.getX() + previousCoordinate.getX(), newGlobalOffset.getY() + previousCoordinate.getY());
-        System.out.println("New ABS: " + absolutePosition);
-
-        previousCoordinate = newGlobalOffset;
-
-        return new OdometryPosition(absolutePosition.getX(), absolutePosition.getY(), absoluteHeading);
+    public static void initialize(double cpr, double wheelDiameter, double leftOffset, double rightOffset, double frontBackOffset) {
+        instance = new OdometryCore(cpr, wheelDiameter, leftOffset, rightOffset, frontBackOffset);
     }
 
-    double ticksToInches(double ticks) {
-        return ticks * TICKS_TO_INCH;
+    public static boolean isInitialized() {
+        return instance != null;
+    }
+
+    public OdometryPosition getCurrentPosition(EncoderPositions positions) {
+        double newLeftInches = CoreMath.ticksToInches(positions.getLeftPosition(), cpr, wheelDiameter);
+        double newRightInches = CoreMath.ticksToInches(positions.getRightPosition(), cpr, wheelDiameter);
+        double newFrontBackInches = CoreMath.ticksToInches(-positions.getFrontBackPosition(), cpr, wheelDiameter);
+
+        double leftChange = newLeftInches - leftInches;
+        double rightChange = newRightInches - rightInches;
+        double frontBackChange = newFrontBackInches - frontBackInches;
+
+        double previousHeading = CoreMath.getHeading(leftInches, rightInches, leftOffset, rightOffset);
+
+        OdometryPosition posChange = CoreMath.getOdometryPosition(leftChange, rightChange, frontBackChange, leftOffset, rightOffset, frontBackOffset, previousHeading);
+
+        leftInches += leftChange;
+        rightInches += rightChange;
+        frontBackInches += frontBackChange;
+        position = new OdometryPosition(position.getX() + posChange.getX(), position.getY() + posChange.getY(), posChange.getHeadingRadians(), HeadingUnit.RADIANS);
+
+        return position;
     }
 }

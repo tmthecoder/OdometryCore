@@ -9,7 +9,7 @@ package com.tejasmehta.OdometryCore.localization;
  * Made by Tejas Mehta
  * Made on Wednesday, November 04, 2020
  * File Name: OdometryPosition
- * Package: com.tejasmehta.com.tejasmehta.OdometryCore.old.OdometryCore*
+ * Package: com.tejasmehta.com.tejasmehta.OdometryCore.localization
  */
 
 public enum HeadingUnit {

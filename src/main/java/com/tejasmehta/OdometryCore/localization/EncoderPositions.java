@@ -2,7 +2,8 @@
  * Made by Tejas Mehta
  * Made on Wednesday, November 11, 2020
  * File Name: EncoderTicks
- * Package: org.firstinspires.ftc.teamcode.testCode.odometryCoreTest.localization*/
+ * Package: com.tejasmehta.OdometryCore.localization
+ */
 package com.tejasmehta.OdometryCore.localization;
 
 public class EncoderPositions {

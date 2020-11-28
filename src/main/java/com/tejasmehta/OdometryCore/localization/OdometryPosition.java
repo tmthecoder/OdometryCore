@@ -1,11 +1,10 @@
-package com.tejasmehta.OdometryCore.localization;
-
 /****
  * Made by Tejas Mehta
- * Made on Wednesday, November 04, 2020
- * File Name: OdometryPosition
- * Package: com.tejasmehta.com.tejasmehta.OdometryCore.old.OdometryCore*
+ * Made on Wednesday, November 12, 2020
+ * File Name: EncoderTicks
+ * Package: com.tejasmehta.OdometryCore.localization
  */
+package com.tejasmehta.OdometryCore.localization;
 
 public class OdometryPosition {
     private final double x;
@@ -16,7 +15,7 @@ public class OdometryPosition {
     public OdometryPosition(double x, double y, double heading, HeadingUnit unit) {
         this.x = x;
         this.y = y;
-        this.heading = Math.toDegrees(heading);
+        this.heading = heading;
         this.unit = unit;
     }
 

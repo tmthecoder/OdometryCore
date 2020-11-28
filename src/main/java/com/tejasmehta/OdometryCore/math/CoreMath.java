@@ -6,7 +6,6 @@
  */
 package com.tejasmehta.OdometryCore.math;
 
-
 import com.tejasmehta.OdometryCore.localization.HeadingUnit;
 import com.tejasmehta.OdometryCore.localization.OdometryPosition;
 
@@ -220,10 +219,14 @@ public class CoreMath {
     public static OdometryPosition getOdometryPosition(double leftChange, double rightChange, double frontBackChange, double leftOffset, double rightOffset, double frontBackOffset, double previousHeading) {
         double yLength = (leftChange + rightChange)/2.0;
         double headingChange = getHeading(leftChange, rightChange, leftOffset, rightOffset);
+//        if (Math.floor(leftChange/10) == Math.floor(-1 * rightChange/10)) frontBackChange = 0;
+        frontBackChange = frontBackChange - headingChange * (2 * frontBackOffset * Math.PI * 0.25)/(Math.PI/2);
         double averageHeading = getAverageHeading(previousHeading, headingChange);
         CartesianCoordinate rotatedX = CartesianCoordinate.fromPolar(new PolarCoordinate(frontBackChange, averageHeading));
         CartesianCoordinate rotatedY = CartesianCoordinate.fromPolar(new PolarCoordinate(yLength, averageHeading));
-        return new OdometryPosition(-rotatedX.getX() + rotatedY.getY(), rotatedX.getY() + rotatedY.getX(), CoreMath.simplifyRadians(previousHeading + averageHeading), HeadingUnit.RADIANS);
+        System.out.println("ROTY: " + rotatedX.getY());
+        System.out.println("ROTY: " + rotatedY.getY());
+        return new OdometryPosition(-rotatedX.getX() - rotatedY.getY(), -rotatedX.getY() + rotatedY.getX(), CoreMath.simplifyRadians(previousHeading + averageHeading), HeadingUnit.RADIANS);
     }
 
     /**

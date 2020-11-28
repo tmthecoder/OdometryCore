@@ -1,9 +1,3 @@
-/****
- * Made by Tejas Mehta
- * Made on Wednesday, November 11, 2020
- * File Name: OdometryCore
- * Package: com.tejasmehta.OdometryCore
- */
 package com.tejasmehta.OdometryCore;
 
 import com.tejasmehta.OdometryCore.localization.EncoderPositions;
@@ -12,6 +6,7 @@ import com.tejasmehta.OdometryCore.localization.OdometryPosition;
 import com.tejasmehta.OdometryCore.math.CoreMath;
 
 public class OdometryCore {
+
     private final double wheelDiameter;
     private final double cpr;
     private final double leftOffset;
@@ -23,7 +18,7 @@ public class OdometryCore {
     private double frontBackInches = 0;
     private OdometryPosition position = new OdometryPosition(0, 0, 0, HeadingUnit.RADIANS);
 
-    private OdometryCore(double wheelDiameter, double cpr, double leftOffset, double rightOffset, double frontBackOffset) {
+    private OdometryCore(double cpr, double wheelDiameter, double leftOffset, double rightOffset, double frontBackOffset) {
         this.wheelDiameter = wheelDiameter;
         this.cpr = cpr;
         this.leftOffset = leftOffset;
@@ -48,7 +43,7 @@ public class OdometryCore {
     public OdometryPosition getCurrentPosition(EncoderPositions positions) {
         double newLeftInches = CoreMath.ticksToInches(positions.getLeftPosition(), cpr, wheelDiameter);
         double newRightInches = CoreMath.ticksToInches(positions.getRightPosition(), cpr, wheelDiameter);
-        double newFrontBackInches = CoreMath.ticksToInches(-positions.getFrontBackPosition(), cpr, wheelDiameter);
+        double newFrontBackInches = CoreMath.ticksToInches(positions.getFrontBackPosition(), cpr, wheelDiameter);
 
         double leftChange = newLeftInches - leftInches;
         double rightChange = newRightInches - rightInches;
@@ -58,10 +53,12 @@ public class OdometryCore {
 
         OdometryPosition posChange = CoreMath.getOdometryPosition(leftChange, rightChange, frontBackChange, leftOffset, rightOffset, frontBackOffset, previousHeading);
 
+        double absHeading = CoreMath.getHeading(newLeftInches, newRightInches, leftOffset, rightOffset);
+
         leftInches += leftChange;
         rightInches += rightChange;
         frontBackInches += frontBackChange;
-        position = new OdometryPosition(position.getX() + posChange.getX(), position.getY() + posChange.getY(), posChange.getHeadingRadians(), HeadingUnit.RADIANS);
+        position = new OdometryPosition(position.getX() + posChange.getX(), position.getY() + posChange.getY(), absHeading, HeadingUnit.RADIANS);
 
         return position;
     }

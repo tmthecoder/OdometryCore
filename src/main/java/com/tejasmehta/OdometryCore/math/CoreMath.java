@@ -1,14 +1,14 @@
-/*
- * @author Tejas Mehta
- * Made on Wednesday, November 04, 2020
- * File Name: CoreMath
- * Package: com.tejasmehta.OdometryCore.math
- */
 package com.tejasmehta.OdometryCore.math;
 
 import com.tejasmehta.OdometryCore.localization.HeadingUnit;
 import com.tejasmehta.OdometryCore.localization.OdometryPosition;
 
+/**
+ * @author Tejas Mehta
+ * Made on Wednesday, November 04, 2020
+ * File Name: CoreMath
+ * A class to house and handle all the math methods for three wheel odometry
+ */
 public class CoreMath {
 
     /**
@@ -138,8 +138,6 @@ public class CoreMath {
         double rawXCoordinate = getRawXCoordinate(frontBackChange, frontBackOffset, heading);
         double rawYCoordinate = getRawYCoordinate(leftChange, rightChange, leftOffset, rightOffset, heading);
         double rawMovement = rightChange/heading + rightOffset;
-        System.out.println("RAWX: " + rawXCoordinate);
-        System.out.println("RAWY: " + rawYCoordinate);
         return getPolarCoordinate(rawXCoordinate, rawYCoordinate);
     }
 
@@ -195,8 +193,6 @@ public class CoreMath {
     public static CartesianCoordinate getConvertedCoordinate(double leftChange, double rightChange, double frontBackChange, double leftOffset, double rightOffset, double frontBackOffset) {
         PolarCoordinate relativePolarCoordinate = getPolarCoordinate(leftChange, rightChange, frontBackChange, leftOffset, rightOffset, frontBackOffset);
         double tanVal = frontBackChange == 0 ? 0 : ((leftChange+rightChange)/2)/frontBackChange;
-        System.out.println("LEFTC: " + leftChange);
-        System.out.println("RIGHTC: " + rightChange);
         CartesianCoordinate relativeCartesian = CartesianCoordinate.fromPolar(relativePolarCoordinate);
         double newAngle = Math.atan2(relativeCartesian.getY(), relativeCartesian.getX());
         return getConvertedCoordinate(relativePolarCoordinate, newAngle);
@@ -224,8 +220,6 @@ public class CoreMath {
         double averageHeading = getAverageHeading(previousHeading, headingChange);
         CartesianCoordinate rotatedX = CartesianCoordinate.fromPolar(new PolarCoordinate(frontBackChange, averageHeading));
         CartesianCoordinate rotatedY = CartesianCoordinate.fromPolar(new PolarCoordinate(yLength, averageHeading));
-        System.out.println("ROTY: " + rotatedX.getY());
-        System.out.println("ROTY: " + rotatedY.getY());
         return new OdometryPosition(-rotatedX.getX() - rotatedY.getY(), -rotatedX.getY() + rotatedY.getX(), CoreMath.simplifyRadians(previousHeading + averageHeading), HeadingUnit.RADIANS);
     }
 
@@ -237,8 +231,6 @@ public class CoreMath {
      * @return - The converted Cartesian Coordinate on the local plane of the field
      */
     public static CartesianCoordinate getConvertedCoordinate(PolarCoordinate polarCoordinate, double absoluteHeading) {
-        System.out.println("HEADINGR: " + absoluteHeading);
-        System.out.println("HEADINGD: " + Math.toDegrees(absoluteHeading));
         return CartesianCoordinate.fromPolar(new PolarCoordinate(polarCoordinate.getR(), absoluteHeading + Math.PI/2));
     }
 

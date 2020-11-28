@@ -5,6 +5,12 @@ import com.tejasmehta.OdometryCore.localization.HeadingUnit;
 import com.tejasmehta.OdometryCore.localization.OdometryPosition;
 import com.tejasmehta.OdometryCore.math.CoreMath;
 
+/**
+ * @author Tejas Mehta
+ * Made on Wednesday, November 04, 2020
+ * File Name: Odometrycore
+ * The main class to wrap over all odometry calculations
+ */
 public class OdometryCore {
 
     private final double wheelDiameter;
@@ -18,6 +24,14 @@ public class OdometryCore {
     private double frontBackInches = 0;
     private OdometryPosition position = new OdometryPosition(0, 0, 0, HeadingUnit.RADIANS);
 
+    /**
+     * Private constructor for local instance construction
+     * @param cpr - The counts per rotation for the encoders
+     * @param wheelDiameter - The encoder wheel's diameter (in inches)
+     * @param leftOffset - The left encoder's offset from the center (in inches)
+     * @param rightOffset - The right wheel's offset from the center (in inches)
+     * @param frontBackOffset - The front or back wheel's offset from the center (in inches)
+     */
     private OdometryCore(double cpr, double wheelDiameter, double leftOffset, double rightOffset, double frontBackOffset) {
         this.wheelDiameter = wheelDiameter;
         this.cpr = cpr;
@@ -26,20 +40,41 @@ public class OdometryCore {
         this.frontBackOffset = frontBackOffset;
     }
 
-
+    /**
+     * The static instance getter
+     * @throws IllegalArgumentException if there is no instance made
+     * @return - The current instance of OdometryCore
+     */
     public static OdometryCore getInstance() {
         if (instance == null) throw new IllegalArgumentException("Please initialize OdometryCore with OdometryCore.initialize(cpr, wheelDiameter, leftOffset, rightOffset, frontBackOffset)");
         return instance;
     }
 
+    /**
+     * A method to initialize the static OdometryCore instance
+     * @param cpr - The counts per rotation for the encoders
+     * @param wheelDiameter - The encoder wheel's diameter (in inches)
+     * @param leftOffset - The left encoder's offset from the center (in inches)
+     * @param rightOffset - The right wheel's offset from the center (in inches)
+     * @param frontBackOffset - The front or back wheel's offset from the center (in inches)
+     */
     public static void initialize(double cpr, double wheelDiameter, double leftOffset, double rightOffset, double frontBackOffset) {
         instance = new OdometryCore(cpr, wheelDiameter, leftOffset, rightOffset, frontBackOffset);
     }
 
+    /**
+     * A checker to see whether the core is initialized
+     * @return - A boolean signifying whether the core is initialized
+     */
     public static boolean isInitialized() {
         return instance != null;
     }
 
+    /**
+     * A method to get the current position using three wheel odometry
+     * @param positions - The robot's three encoder's positions
+     * @return - The Position of the robot with an x, y, and heading
+     */
     public OdometryPosition getCurrentPosition(EncoderPositions positions) {
         double newLeftInches = CoreMath.ticksToInches(positions.getLeftPosition(), cpr, wheelDiameter);
         double newRightInches = CoreMath.ticksToInches(positions.getRightPosition(), cpr, wheelDiameter);

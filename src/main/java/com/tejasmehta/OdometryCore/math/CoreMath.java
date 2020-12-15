@@ -123,7 +123,7 @@ public class CoreMath {
 
     /**
      * A method to take the changes in the left, right, and front/back odometry wheels, along with their respective offsets to create a polar coordinate
-     * after getting their raw x & y coordinates (still not localized)
+     * after getting their raw x and y coordinates (still not localized)
      *
      * @param leftChange      - The change in the left odometry wheel's movement (in inches)
      * @param rightChange     - The change in the right odometry wheel's movement (in inches)

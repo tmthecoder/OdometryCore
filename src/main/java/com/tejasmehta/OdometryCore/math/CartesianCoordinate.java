@@ -24,7 +24,7 @@ public class CartesianCoordinate {
     }
 
     /**
-     * The constructor for a the CartesianCoordinate class
+     * The constructor for the CartesianCoordinate class
      * @param x - The x value of the coordinate
      * @param y - The y value of the coordinate
      */

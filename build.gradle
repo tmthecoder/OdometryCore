@@ -3,6 +3,11 @@ plugins {
     id 'maven'
 }
 
+javadoc {
+    source = sourceSets.main.allJava
+    classpath = configurations.compile
+}
+
 group 'com.github.tmthecoder'
 version '1.0.0'
 

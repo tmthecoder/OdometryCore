@@ -53,7 +53,9 @@ public class CoreMath {
      * @return - The radian value of the current heading
      */
     public static double getHeading(double leftChange, double rightChange, double leftOffset, double rightOffset) {
-        return (rightChange - leftChange) / (leftOffset + rightOffset);
+        double angleRads = (rightChange - leftChange) / (leftOffset + rightOffset);
+        double normalized = angleRads % (2 * Math.PI);
+        return normalized;
     }
 
     /**

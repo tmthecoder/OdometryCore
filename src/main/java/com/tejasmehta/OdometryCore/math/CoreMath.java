@@ -55,6 +55,9 @@ public class CoreMath {
     public static double getHeading(double leftChange, double rightChange, double leftOffset, double rightOffset) {
         double angleRads = (rightChange - leftChange) / (leftOffset + rightOffset);
         double normalized = angleRads % (2 * Math.PI);
+        if (normalized < 0) {
+            normalized += 2 * Math.PI;
+        }
         return normalized;
     }
 
